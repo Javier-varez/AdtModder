@@ -7,3 +7,6 @@
 [submodule "Ditto"]
 	path = Ditto
 	url = https://github.com/Javier-varez/Ditto.git
+[submodule "json"]
+	path = json
+	url = https://github.com/nlohmann/json.git

@@ -2,8 +2,11 @@ cmake_minimum_required(VERSION 3.16)
 
 project(adt_modder)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS true)
+
 add_executable(adt_modder
     src/main.cpp
+    src/adt_modder.cpp
     src/fileio.cpp
     src/adt.c)
 
@@ -16,8 +19,10 @@ target_compile_features(adt_modder PUBLIC
 target_link_libraries(adt_modder PUBLIC
     fmt
     argparse
-    Ditto)
+    Ditto
+    nlohmann_json)
 
 add_subdirectory(fmt)
 add_subdirectory(argparse)
 add_subdirectory(Ditto)
+add_subdirectory(json)

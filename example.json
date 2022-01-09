@@ -1,0 +1,242 @@
+[
+    {
+        "name": "zero_out_property",
+        "node": "/",
+        "property": "serial-number"
+    },
+    {
+        "name": "zero_out_property",
+        "node": "/",
+        "property": "mlb-serial-number"
+    },
+    {
+        "name": "zero_out_property",
+        "node": "/",
+        "property": "region-info"
+    },
+    {
+        "name": "zero_out_property",
+        "node": "/",
+        "property": "time-stamp"
+    },
+    {
+        "name": "zero_out_property",
+        "node": "/",
+        "property": "model-config"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen",
+        "property": "apfs-preboot-uuid"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen",
+        "property": "boot-uuid"
+    },
+    {
+        "name": "zero_out_property",
+        "node": "/chosen",
+        "property": "boot-objects-path"
+    },
+    {
+        "name": "zero_out_property",
+        "node": "/chosen",
+        "property": "system-volume-auth-blob"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen",
+        "property": "mac-address-wifi0"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen",
+        "property": "mac-address-bluetooth0"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen/secure-boot-hashes",
+        "property": "ansf"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen/secure-boot-hashes",
+        "property": "ciof"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen/secure-boot-hashes",
+        "property": "tmuf"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen/secure-boot-hashes",
+        "property": "sfr-manifest-hash"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen/secure-boot-hashes",
+        "property": "aubt"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen/secure-boot-hashes",
+        "property": "logo"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen/secure-boot-hashes",
+        "property": "lpol"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen/secure-boot-hashes",
+        "property": "ibot"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen/secure-boot-hashes",
+        "property": "dcp2"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen/secure-boot-hashes",
+        "property": "aopf"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen/secure-boot-hashes",
+        "property": "anef"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen/secure-boot-hashes",
+        "property": "avef"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen/secure-boot-hashes",
+        "property": "gfxf"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen/secure-boot-hashes",
+        "property": "ispf"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen/secure-boot-hashes",
+        "property": "pmpf"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen/secure-boot-hashes",
+        "property": "siof"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen/secure-boot-hashes",
+        "property": "dtre"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen/secure-boot-hashes",
+        "property": "ibdt"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen/secure-boot-hashes",
+        "property": "isys"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen/secure-boot-hashes",
+        "property": "system-volume-auth-blob"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen/secure-boot-hashes",
+        "property": "csys"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen/secure-boot-hashes",
+        "property": "base-system-volume-auth-blob"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen/secure-boot-hashes",
+        "property": "bstc"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen/secure-boot-hashes",
+        "property": "trst"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen/secure-boot-hashes",
+        "property": "fuos"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/chosen/secure-boot-hashes",
+        "property": "state"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/arm-io/wlan",
+        "property": "local-mac-address"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/arm-io/wlan",
+        "property": "wifi-calibration-msf"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/arm-io/bluetooth",
+        "property": "bluetooth-taurus-calibration-bf"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/arm-io/bluetooth",
+        "property": "bluetooth-taurus-calibration"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/arm-io/bluetooth",
+        "property": "local-mac-address"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/arm-io/usb-drd0",
+        "property": "device-mac-address"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/arm-io/usb-drd0",
+        "property": "host-mac-address"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/arm-io/usb-drd1",
+        "property": "device-mac-address"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/arm-io/usb-drd1",
+        "property": "host-mac-address"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/arm-io/usb-drd2",
+        "property": "device-mac-address"
+    },
+    {
+        "name": "randomize_property",
+        "node": "/arm-io/usb-drd2",
+        "property": "host-mac-address"
+    }
+]
