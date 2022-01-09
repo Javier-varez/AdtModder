@@ -1,3 +1,9 @@
 [submodule "fmt"]
 	path = fmt
 	url = https://github.com/fmtlib/fmt.git
+[submodule "argparse"]
+	path = argparse
+	url = https://github.com/p-ranav/argparse.git
+[submodule "Ditto"]
+	path = Ditto
+	url = https://github.com/Javier-varez/Ditto.git
