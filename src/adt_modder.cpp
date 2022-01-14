@@ -1,6 +1,7 @@
 #include "adt_modder.h"
 
 #include <sstream>
+#include <cstring>
 
 #include "adt.h"
 #include "fmt/core.h"
@@ -33,6 +34,20 @@ class RandomizePropertyOp : public AdtModder::Op {
   static bool s_initialized;
 };
 
+class ReplacePropertyOp : public AdtModder::Op {
+ public:
+  static ReplacePropertyOp& GetInstance() {
+    static ReplacePropertyOp op;
+    return op;
+  }
+
+ private:
+  bool Run(Ditto::span<uint8_t> adt_data, const nlohmann::json&) override;
+  const char* Help() const override;
+
+  static bool s_initialized;
+};
+
 std::unordered_map<std::string, AdtModder::Op*>& GetOperations() {
   static std::unordered_map<std::string, AdtModder::Op*> ops;
   return ops;
@@ -40,8 +55,12 @@ std::unordered_map<std::string, AdtModder::Op*>& GetOperations() {
 
 bool ZeroOutPropertyOp::s_initialized = AdtModder::RegisterOperation(
     "zero_out_property", ZeroOutPropertyOp::GetInstance());
+
 bool RandomizePropertyOp::s_initialized = AdtModder::RegisterOperation(
     "randomize_property", RandomizePropertyOp::GetInstance());
+
+bool ReplacePropertyOp::s_initialized = AdtModder::RegisterOperation(
+    "replace_property", ReplacePropertyOp::GetInstance());
 
 bool AdtModder::RunFromJson(Ditto::span<uint8_t> adt_data,
                             const nlohmann::json& op_array) {
@@ -162,5 +181,60 @@ bool RandomizePropertyOp::Run(Ditto::span<uint8_t> adt_data,
   for (size_t i = 0; i < prop->size; i++) {
     prop->value[i] = rand();
   }
+  return true;
+}
+
+const char* ReplacePropertyOp::Help() const {
+  return "Replaces the contents of the property by the given value";
+}
+
+bool ReplacePropertyOp::Run(Ditto::span<uint8_t> adt_data,
+                            const nlohmann::json& command) {
+  if (!command.contains("node") || !command["node"].is_string()) {
+    fmt::print("Unable to find node in command\n");
+    return false;
+  }
+  if (!command.contains("property") || !command["property"].is_string()) {
+    fmt::print("Unable to find property in command\n");
+    return false;
+  }
+  const std::string node = command["node"].get<std::string>();
+  const std::string prop_name = command["property"].get<std::string>();
+
+  if (!command.contains("value")) {
+    fmt::print("Unable to find value in command\n");
+    return false;
+  }
+
+  if (!command["value"].is_string()) {
+    fmt::print("Only strings are supported at this time to replace a property\n");
+    return false;
+  }
+
+  uint8_t* data = adt_data.data();
+  int node_offset = adt_path_offset(data, node.c_str());
+  if (node_offset < 0) {
+    fmt::print("Could not look find node \"%s\"\n", node.c_str());
+    return false;
+  }
+  auto* prop = adt_get_property(data, node_offset, prop_name.c_str());
+  if (prop == nullptr) {
+    fmt::print("Could not look find node \"{}\", prop \"{}\"\n", node,
+               prop_name);
+    return false;
+  }
+
+  const std::string new_value = command["value"].get<std::string>();
+  if (new_value.length() + 1 > prop->size) {
+    fmt::print("The requested string value \"%s\" "
+               "for property \"%s\" exceeds the size "
+               "of the property (%d).\n",
+               new_value.c_str(),
+               prop->name,
+               prop->size);
+    return 0;
+  }
+
+  strncpy(reinterpret_cast<char*>(&prop->value[0]), new_value.c_str(), prop->size);
   return true;
 }

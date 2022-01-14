@@ -1,8 +1,9 @@
 [
     {
-        "name": "zero_out_property",
+        "name": "replace_property",
         "node": "/",
-        "property": "serial-number"
+        "property": "serial-number",
+        "value": "ABCDEFGHIJK"
     },
     {
         "name": "zero_out_property",
