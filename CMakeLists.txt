@@ -7,6 +7,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS true)
 add_executable(adt_modder
     src/main.cpp
     src/adt_modder.cpp
+    src/adt_modder/replace_prop_op.cpp
+    src/adt_modder/randomize_prop_op.cpp
+    src/adt_modder/zero_out_prop_op.cpp
     src/fileio.cpp
     src/adt.c)
 
