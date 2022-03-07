@@ -12,7 +12,7 @@ class ReplacePropertyOp : public AdtModder::Op {
   }
 
  private:
-  bool Run(Ditto::span<uint8_t> adt_data, const nlohmann::json&) override;
+  AdtModder::Result Run(AdtModder::Adt adt_data, const nlohmann::json&) override;
   const char* Help() const override {
     return "Replaces the contents of the property by the given value";
   }
@@ -23,41 +23,41 @@ class ReplacePropertyOp : public AdtModder::Op {
 bool ReplacePropertyOp::s_initialized = AdtModder::RegisterOperation(
     "replace_property", ReplacePropertyOp::GetInstance());
 
-bool ReplacePropertyOp::Run(Ditto::span<uint8_t> adt_data,
+AdtModder::Result ReplacePropertyOp::Run(AdtModder::Adt adt_data,
                             const nlohmann::json& command) {
   if (!command.contains("node") || !command["node"].is_string()) {
     fmt::print("Unable to find node in command\n");
-    return false;
+    return AdtModder::Error::InvalidOperation;
   }
   if (!command.contains("property") || !command["property"].is_string()) {
     fmt::print("Unable to find property in command\n");
-    return false;
+    return AdtModder::Error::InvalidOperation;
   }
   const std::string node = command["node"].get<std::string>();
   const std::string prop_name = command["property"].get<std::string>();
 
   if (!command.contains("value")) {
     fmt::print("Unable to find value in command\n");
-    return false;
+    return AdtModder::Error::InvalidOperation;
   }
 
   if (!command["value"].is_string()) {
     fmt::print(
         "Only strings are supported at this time to replace a property\n");
-    return false;
+    return AdtModder::Error::InvalidOperation;
   }
 
   uint8_t* data = adt_data.data();
   int node_offset = adt_path_offset(data, node.c_str());
   if (node_offset < 0) {
     fmt::print("Could not look find node \"%s\"\n", node.c_str());
-    return false;
+    return AdtModder::Error::NodeNotFound;
   }
   auto* prop = adt_get_property(data, node_offset, prop_name.c_str());
   if (prop == nullptr) {
     fmt::print("Could not look find node \"{}\", prop \"{}\"\n", node,
                prop_name);
-    return false;
+    return AdtModder::Error::PropertyNotFound;
   }
 
   const std::string new_value = command["value"].get<std::string>();
@@ -67,10 +67,10 @@ bool ReplacePropertyOp::Run(Ditto::span<uint8_t> adt_data,
         "for property \"%s\" exceeds the size "
         "of the property (%d).\n",
         new_value.c_str(), prop->name, prop->size);
-    return 0;
+    return AdtModder::Error::InvalidOperation;
   }
 
   strncpy(reinterpret_cast<char*>(&prop->value[0]), new_value.c_str(),
           prop->size);
-  return true;
+  return adt_data;
 }

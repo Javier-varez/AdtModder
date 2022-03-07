@@ -9,23 +9,23 @@ std::unordered_map<std::string, AdtModder::Op*>& GetOperations() {
   return ops;
 }
 
-bool AdtModder::RunFromJson(Ditto::span<uint8_t> adt_data,
+AdtModder::Result AdtModder::RunFromJson(AdtModder::Adt adt_data,
                             const nlohmann::json& op_array) {
   if (!op_array.is_array()) {
     fmt::print("AdtModder: Expected a json array.\n");
-    return false;
+    return Error::MalformedJson;
   }
 
   auto& ops = GetOperations();
   for (auto& element : op_array) {
     if (!element.is_object()) {
       fmt::print("AdtModder: Expected a json object.\n");
-      return false;
+      return Error::MalformedJson;
     }
 
     if (!element.contains("name")) {
       fmt::print("All operation objects should have a \"name\" property\n");
-      return false;
+      return Error::MalformedJson;
     }
 
     std::string name = element["name"].get<std::string>();
@@ -35,17 +35,13 @@ bool AdtModder::RunFromJson(Ditto::span<uint8_t> adt_data,
     const auto op = ops.find(name);
     if (op == ops.cend()) {
       fmt::print("AdtModder: Unknown operation with name: \"{}\"\n", name);
-      return false;
+      return Error::InvalidOperation;
     }
 
-    if (!op->second->Run(adt_data, element)) {
-      fmt::print("AdtModder: Error running operation with name: \"{}\"\n",
-                 name);
-      return false;
-    }
+    adt_data = DITTO_PROPAGATE(op->second->Run(adt_data, element));
   }
 
-  return true;
+  return adt_data;
 }
 
 std::string AdtModder::Help() const {

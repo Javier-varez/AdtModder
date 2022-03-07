@@ -6,7 +6,6 @@
 
 Ditto::Result<void, File::Error> run(int argc, char* argv[]) {
   AdtModder modder;
-
   argparse::ArgumentParser program("adt_modder");
 
   program.add_argument("device_tree").help("Input ADT to modify");
@@ -34,10 +33,16 @@ Ditto::Result<void, File::Error> run(int argc, char* argv[]) {
   auto original_dt = DITTO_PROPAGATE(File::Open(original_dt_name.c_str()));
   auto dt_data = DITTO_PROPAGATE(original_dt.ReadAll());
 
-  modder.RunFromJson(dt_data, operations);
+  auto mod_result = modder.RunFromJson(dt_data, operations);
+  if (mod_result.is_error()) {
+    fmt::print("Error running commands: {}", AdtModder::error_to_string(mod_result.error_value()));
+    exit(1);
+  }
+
+  const auto final_data = mod_result.ok_value();
 
   File dest_dt = DITTO_PROPAGATE(File::Create(dest_dt_name.c_str()));
-  auto result = dest_dt.Write(dt_data);
+  auto result = dest_dt.Write(final_data);
   if (result.is_error()) {
     return result.error_value();
   }

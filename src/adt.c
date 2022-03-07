@@ -83,6 +83,13 @@ struct adt_property *adt_get_property(void *adt, int nodeoffset,
   return adt_get_property_namelen(adt, nodeoffset, name, strlen(name));
 }
 
+int adt_get_property_offset(void *adt, int nodeoffset, const char *name) {
+  struct adt_property *prop =
+      adt_get_property_namelen(adt, nodeoffset, name, strlen(name));
+  int offset = (u8 *)prop - (u8 *)adt;
+  return offset;
+}
+
 void *adt_getprop_namelen(void *adt, int nodeoffset, const char *name,
                           size_t namelen, u32 *lenp) {
   struct adt_property *prop;

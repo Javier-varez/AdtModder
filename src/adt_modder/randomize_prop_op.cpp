@@ -12,7 +12,7 @@ class RandomizePropertyOp : public AdtModder::Op {
   }
 
  private:
-  bool Run(Ditto::span<uint8_t> adt_data, const nlohmann::json&) override;
+  AdtModder::Result Run(AdtModder::Adt adt_data, const nlohmann::json&) override;
 
   const char* Help() const override {
     return "Randomizes a property value in the given adt";
@@ -24,15 +24,15 @@ class RandomizePropertyOp : public AdtModder::Op {
 bool RandomizePropertyOp::s_initialized = AdtModder::RegisterOperation(
     "randomize_property", RandomizePropertyOp::GetInstance());
 
-bool RandomizePropertyOp::Run(Ditto::span<uint8_t> adt_data,
+AdtModder::Result RandomizePropertyOp::Run(AdtModder::Adt adt_data,
                               const nlohmann::json& command) {
   if (!command.contains("node") || !command["node"].is_string()) {
     fmt::print("Unable to find node in command\n");
-    return false;
+    return AdtModder::Error::InvalidOperation;
   }
   if (!command.contains("property") || !command["property"].is_string()) {
     fmt::print("Unable to find property in command\n");
-    return false;
+    return AdtModder::Error::InvalidOperation;
   }
   const std::string node = command["node"].get<std::string>();
   const std::string prop_name = command["property"].get<std::string>();
@@ -41,17 +41,17 @@ bool RandomizePropertyOp::Run(Ditto::span<uint8_t> adt_data,
   int node_offset = adt_path_offset(data, node.c_str());
   if (node_offset < 0) {
     fmt::print("Could not look find node \"{}\"\n", node.c_str());
-    return false;
+    return AdtModder::Error::NodeNotFound;
   }
   auto* prop = adt_get_property(data, node_offset, prop_name.c_str());
   if (prop == nullptr) {
     fmt::print("Could not look find node \"{}\", prop \"{}\"\n", node,
                prop_name);
-    return false;
+    return AdtModder::Error::PropertyNotFound;
   }
 
   for (size_t i = 0; i < prop->size; i++) {
     prop->value[i] = rand();
   }
-  return true;
+  return adt_data;
 }

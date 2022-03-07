@@ -2,3 +2,5 @@ compile_commands.json
 build
 **/*.bin
 .cache
+**/.idea
+**/cmake-build**

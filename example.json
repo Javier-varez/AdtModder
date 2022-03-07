@@ -239,5 +239,10 @@
         "name": "randomize_property",
         "node": "/arm-io/usb-drd2",
         "property": "host-mac-address"
+    },
+    {
+        "name": "delete_property",
+        "node": "/arm-io/usb-drd2",
+        "property": "host-mac-address"
     }
 ]
