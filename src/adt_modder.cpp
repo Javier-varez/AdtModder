@@ -10,7 +10,7 @@ std::unordered_map<std::string, AdtModder::Op*>& GetOperations() {
 }
 
 AdtModder::Result AdtModder::RunFromJson(AdtModder::Adt adt_data,
-                            const nlohmann::json& op_array) {
+                            const nlohmann::json& op_array) noexcept {
   if (!op_array.is_array()) {
     fmt::print("AdtModder: Expected a json array.\n");
     return Error::MalformedJson;
@@ -44,7 +44,7 @@ AdtModder::Result AdtModder::RunFromJson(AdtModder::Adt adt_data,
   return adt_data;
 }
 
-std::string AdtModder::Help() const {
+std::string AdtModder::Help() const noexcept {
   std::stringstream stream;
   stream << "\nSupported Adt Modder commands:\n";
   for (const auto& [name, op] : GetOperations()) {
@@ -53,7 +53,7 @@ std::string AdtModder::Help() const {
   return stream.str();
 }
 
-bool AdtModder::RegisterOperation(std::string_view name, Op& operation) {
+bool AdtModder::RegisterOperation(std::string_view name, Op& operation) noexcept {
   GetOperations()[std::string{name}] = &operation;
   return true;
 }

@@ -37,18 +37,18 @@ class AdtModder {
 
   class Op {
    public:
-    virtual Result Run(Adt adt_data, const nlohmann::json&) = 0;
-    virtual const char* Help() const {
+    virtual Result Run(Adt adt_data, const nlohmann::json&) noexcept = 0;
+    [[nodiscard]] virtual const char* Help() const noexcept {
       return "No help available for this command";
     }
 
     virtual ~Op() = default;
   };
 
-  Result RunFromJson(Adt adt_data, const nlohmann::json& json);
-  std::string Help() const;
+  Result RunFromJson(Adt adt_data, const nlohmann::json& json) noexcept;
+  [[nodiscard]] std::string Help() const noexcept;
 
-  static bool RegisterOperation(std::string_view name, Op& operation);
+  static bool RegisterOperation(std::string_view name, Op& operation) noexcept;
 };
 
 #endif  // ADT_MODDER_H_

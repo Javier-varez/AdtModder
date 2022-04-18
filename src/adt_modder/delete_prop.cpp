@@ -12,9 +12,9 @@ class DeletePropertyOp : public AdtModder::Op {
   }
 
  private:
-  AdtModder::Result Run(AdtModder::Adt adt_data, const nlohmann::json&) override;
+  AdtModder::Result Run(AdtModder::Adt adt_data, const nlohmann::json&) noexcept override;
 
-  const char* Help() const override {
+  [[nodiscard]] const char* Help() const noexcept override {
     return "Deletes the given property for the given node in the ADT";
   }
 
@@ -25,7 +25,7 @@ bool DeletePropertyOp::s_initialized = AdtModder::RegisterOperation(
     "delete_property", DeletePropertyOp::GetInstance());
 
 AdtModder::Result DeletePropertyOp::Run(AdtModder::Adt adt_data,
-                           const nlohmann::json& command) {
+                                 const nlohmann::json& command) noexcept{
   if (!command.contains("node") || !command["node"].is_string()) {
     fmt::print("Unable to find node in command\n");
     return AdtModder::Error::InvalidOperation;

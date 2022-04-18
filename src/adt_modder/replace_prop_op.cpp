@@ -12,8 +12,8 @@ class ReplacePropertyOp : public AdtModder::Op {
   }
 
  private:
-  AdtModder::Result Run(AdtModder::Adt adt_data, const nlohmann::json&) override;
-  const char* Help() const override {
+  AdtModder::Result Run(AdtModder::Adt adt_data, const nlohmann::json&) noexcept override;
+  [[nodiscard]] const char* Help() const noexcept override {
     return "Replaces the contents of the property by the given value";
   }
 
@@ -24,7 +24,7 @@ bool ReplacePropertyOp::s_initialized = AdtModder::RegisterOperation(
     "replace_property", ReplacePropertyOp::GetInstance());
 
 AdtModder::Result ReplacePropertyOp::Run(AdtModder::Adt adt_data,
-                            const nlohmann::json& command) {
+                            const nlohmann::json& command) noexcept {
   if (!command.contains("node") || !command["node"].is_string()) {
     fmt::print("Unable to find node in command\n");
     return AdtModder::Error::InvalidOperation;

@@ -2,7 +2,7 @@
 
 #include "adt.h"
 
-#include "string.h"
+#include <string.h>
 
 /* This API is designed to match libfdt's read-only API */
 

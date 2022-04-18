@@ -6,14 +6,14 @@
 
 class ZeroOutPropertyOp : public AdtModder::Op {
  public:
-  static ZeroOutPropertyOp& GetInstance() {
+  static ZeroOutPropertyOp& GetInstance() noexcept {
     static ZeroOutPropertyOp op;
     return op;
   }
 
  private:
-  AdtModder::Result Run(AdtModder::Adt adt_data, const nlohmann::json&) override;
-  const char* Help() const override;
+  AdtModder::Result Run(AdtModder::Adt adt_data, const nlohmann::json&) noexcept override;
+  [[nodiscard]] const char* Help() const noexcept override;
 
   static bool s_initialized;
 };
@@ -21,12 +21,12 @@ class ZeroOutPropertyOp : public AdtModder::Op {
 bool ZeroOutPropertyOp::s_initialized = AdtModder::RegisterOperation(
     "zero_out_property", ZeroOutPropertyOp::GetInstance());
 
-const char* ZeroOutPropertyOp::Help() const {
+const char* ZeroOutPropertyOp::Help() const noexcept {
   return "Writes 0's to the given property value";
 }
 
 AdtModder::Result ZeroOutPropertyOp::Run(AdtModder::Adt adt_data,
-                                         const nlohmann::json& command) {
+                                         const nlohmann::json& command) noexcept {
   if (!command.contains("node") || !command["node"].is_string()) {
     fmt::print("Unable to find node in command\n");
     return AdtModder::Error::InvalidOperation;

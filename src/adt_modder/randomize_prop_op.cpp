@@ -1,4 +1,3 @@
-#include <cstring>
 
 #include "adt.h"
 #include "adt_modder.h"
@@ -6,15 +5,15 @@
 
 class RandomizePropertyOp : public AdtModder::Op {
  public:
-  static RandomizePropertyOp& GetInstance() {
+  static RandomizePropertyOp& GetInstance() noexcept {
     static RandomizePropertyOp op;
     return op;
   }
 
  private:
-  AdtModder::Result Run(AdtModder::Adt adt_data, const nlohmann::json&) override;
+  AdtModder::Result Run(AdtModder::Adt adt_data, const nlohmann::json&) noexcept override;
 
-  const char* Help() const override {
+  [[nodiscard]] const char* Help() const noexcept override {
     return "Randomizes a property value in the given adt";
   }
 
@@ -25,7 +24,7 @@ bool RandomizePropertyOp::s_initialized = AdtModder::RegisterOperation(
     "randomize_property", RandomizePropertyOp::GetInstance());
 
 AdtModder::Result RandomizePropertyOp::Run(AdtModder::Adt adt_data,
-                              const nlohmann::json& command) {
+                              const nlohmann::json& command) noexcept {
   if (!command.contains("node") || !command["node"].is_string()) {
     fmt::print("Unable to find node in command\n");
     return AdtModder::Error::InvalidOperation;
