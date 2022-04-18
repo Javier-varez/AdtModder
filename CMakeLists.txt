@@ -11,6 +11,7 @@ add_executable(adt_modder
     src/adt_modder/randomize_prop_op.cpp
     src/adt_modder/zero_out_prop_op.cpp
     src/adt_modder/delete_prop.cpp
+    src/adt_modder/add_node.cpp
     src/fileio.cpp
     src/adt.c)
 
