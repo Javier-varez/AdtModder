@@ -1,0 +1,39 @@
+name: AdtModder
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        submodules: 'recursive'
+    - name: Build with CMake
+      uses: lukka/run-cmake@v3
+      with:
+        cmakeListsOrSettingsJson: 'CMakeListsTxtAdvanced'
+        cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
+        cmakeAppendedArgs: ''
+        buildDirectory: '${{ github.workspace }}/build'
+      env:
+        CC: 'clang-12'
+        CXX: 'clang++-12'
+
+  clang_format:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: clang-format lint
+      uses: DoozyX/clang-format-lint-action@v0.11
+      with:
+        source: '.'
+        clangFormatVersion: 10
