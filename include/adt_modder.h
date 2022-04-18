@@ -16,7 +16,7 @@ public:
     InvalidOperation,
     NodeNotFound,
     PropertyNotFound,
-
+    NodeAlreadyExists,
   };
 
   static std::string_view error_to_string(Error err) {
@@ -29,6 +29,8 @@ public:
       return "Node not found";
     case Error::PropertyNotFound:
       return "Property not found";
+    case Error::NodeAlreadyExists:
+      return "Node already exists";
     }
   }
 

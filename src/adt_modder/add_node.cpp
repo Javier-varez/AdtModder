@@ -34,13 +34,21 @@ AdtModder::Result AddNodeOp::Run(AdtModder::Adt adt_data,
   }
 
   const std::string node_name = command["node"].get<std::string>();
+
+  // Check if node already exists
+  {
+    const auto child_node_offset =
+        adt_path_offset(adt_data.data(), node_name.c_str());
+    if (child_node_offset > 0) {
+      return AdtModder::Error::NodeAlreadyExists;
+    }
+  }
+
   const auto last_node_separator_index = node_name.find_last_of('/');
-
-  std::string parent_node_name = node_name.substr(0, last_node_separator_index);
-  std::string child_node_name = node_name.substr(last_node_separator_index + 1);
-
-  fmt::print("parent node name {}, child node name {}\n", parent_node_name,
-             child_node_name);
+  const std::string parent_node_name =
+      node_name.substr(0, last_node_separator_index);
+  const std::string child_node_name =
+      node_name.substr(last_node_separator_index + 1);
 
   const auto parent_node_offset =
       adt_path_offset(adt_data.data(), parent_node_name.c_str());
