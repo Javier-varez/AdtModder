@@ -39,10 +39,8 @@ Ditto::Result<void, File::Error> run(int argc, char* argv[]) {
     exit(1);
   }
 
-  const auto final_data = mod_result.ok_value();
-
   File dest_dt = DITTO_PROPAGATE(File::Create(dest_dt_name.c_str()));
-  auto result = dest_dt.Write(final_data);
+  auto result = dest_dt.Write(dt_data);
   if (result.is_error()) {
     return result.error_value();
   }

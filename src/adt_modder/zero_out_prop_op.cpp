@@ -52,5 +52,5 @@ AdtModder::Result ZeroOutPropertyOp::Run(AdtModder::Adt adt_data,
   }
 
   memset(&prop->value[0], 0, prop->size);
-  return adt_data;
+  return AdtModder::Result::ok();
 }

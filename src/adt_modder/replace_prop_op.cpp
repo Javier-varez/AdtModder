@@ -72,5 +72,5 @@ AdtModder::Result ReplacePropertyOp::Run(AdtModder::Adt adt_data,
 
   strncpy(reinterpret_cast<char*>(&prop->value[0]), new_value.c_str(),
           prop->size);
-  return adt_data;
+  return AdtModder::Result::ok();
 }

@@ -52,5 +52,5 @@ AdtModder::Result RandomizePropertyOp::Run(AdtModder::Adt adt_data,
   for (size_t i = 0; i < prop->size; i++) {
     prop->value[i] = rand();
   }
-  return adt_data;
+  return AdtModder::Result::ok();
 }

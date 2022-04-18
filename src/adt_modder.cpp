@@ -38,10 +38,14 @@ AdtModder::Result AdtModder::RunFromJson(AdtModder::Adt adt_data,
       return Error::InvalidOperation;
     }
 
-    adt_data = DITTO_PROPAGATE(op->second->Run(adt_data, element));
+    auto result = op->second->Run(adt_data, element);
+    if (result.is_error()) {
+      fmt::print("AdtModder: Error running operation \"{}\"\n", name);
+      return result.error_value();
+    }
   }
 
-  return adt_data;
+  return AdtModder::Result::ok();
 }
 
 std::string AdtModder::Help() const noexcept {

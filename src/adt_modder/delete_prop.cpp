@@ -62,5 +62,6 @@ AdtModder::Result DeletePropertyOp::Run(AdtModder::Adt adt_data,
   auto node = ADT_NODE(&adt_data[0], node_offset);
   node->property_count--;
 
-  return AdtModder::Adt {data, adt_data.size() - (next_prop_offset - prop_offset)};
+  adt_data.resize(adt_data.size() - (next_prop_offset - prop_offset));
+  return AdtModder::Result::ok();
 }

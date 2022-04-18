@@ -32,8 +32,8 @@ class AdtModder {
     }
   }
 
-  using Adt = Ditto::span<uint8_t>;
-  using Result = Ditto::Result<Adt, Error>;
+  using Adt = std::vector<uint8_t>&;
+  using Result = Ditto::Result<void, Error>;
 
   class Op {
    public:
