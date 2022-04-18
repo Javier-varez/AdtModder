@@ -248,5 +248,20 @@
     {
         "name": "add_node",
         "node": "/arm-io/virtio"
+    },
+    {
+        "name": "add_property",
+        "node": "/arm-io/virtio",
+        "property": "compatible",
+        "value": "virtio,mmio"
+    },
+    {
+        "name": "add_property",
+        "node": "/arm-io/virtio",
+        "property": "reg",
+        "value": {
+            "type": "u64[]",
+            "contents": ["0x000000019D000000", "0x200"]
+        }
     }
 ]

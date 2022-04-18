@@ -12,6 +12,7 @@ add_executable(adt_modder
     src/adt_modder/zero_out_prop_op.cpp
     src/adt_modder/delete_prop.cpp
     src/adt_modder/add_node.cpp
+    src/adt_modder/add_prop.cpp
     src/fileio.cpp
     src/adt.c)
 
@@ -20,6 +21,8 @@ target_include_directories(adt_modder PUBLIC
 
 target_compile_features(adt_modder PUBLIC
     cxx_std_20)
+
+target_compile_options(adt_modder PUBLIC -Werror)
 
 target_link_libraries(adt_modder PUBLIC
     fmt

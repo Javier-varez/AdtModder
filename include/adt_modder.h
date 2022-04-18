@@ -51,6 +51,9 @@ public:
   [[nodiscard]] std::string Help() const noexcept;
 
   static bool RegisterOperation(std::string_view name, Op &operation) noexcept;
+
+  static Ditto::Result<uint32_t, Error> ParseU32(const std::string &string);
+  static Ditto::Result<uint64_t, Error> ParseU64(const std::string &string);
 };
 
 #endif // ADT_MODDER_H_

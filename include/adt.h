@@ -21,6 +21,8 @@ extern "C" {
 
 #define ADT_ALIGN 4
 
+#define MAX_PROPERTY_NAME_LENGTH 31
+
 extern void *adt;
 
 struct adt_property {

@@ -63,3 +63,43 @@ bool AdtModder::RegisterOperation(std::string_view name,
   GetOperations()[std::string{name}] = &operation;
   return true;
 }
+
+Ditto::Result<uint32_t, AdtModder::Error>
+AdtModder::ParseU32(const std::string &string) {
+  int base = 10;
+  const char *ptr = string.c_str();
+  if (string.starts_with("0x")) {
+    base = 16;
+    ptr = string.c_str() + 2;
+  }
+
+  try {
+    return std::strtoul(string.c_str(), nullptr, base);
+  } catch (std::out_of_range &e) {
+    fmt::print("Invalid u32 in string: {}, {}", string, e.what());
+    return AdtModder::Error::InvalidOperation;
+  } catch (std::invalid_argument &e) {
+    fmt::print("Invalid u32 in string: {}, {}", string, e.what());
+    return AdtModder::Error::InvalidOperation;
+  }
+}
+
+Ditto::Result<uint64_t, AdtModder::Error>
+AdtModder::ParseU64(const std::string &string) {
+  int base = 10;
+  const char *ptr = string.c_str();
+  if (string.starts_with("0x")) {
+    base = 16;
+    ptr = string.c_str() + 2;
+  }
+
+  try {
+    return std::strtoull(string.c_str(), nullptr, base);
+  } catch (std::out_of_range &e) {
+    fmt::print("Invalid u64 in string: {}, {}", string, e.what());
+    return AdtModder::Error::InvalidOperation;
+  } catch (std::invalid_argument &e) {
+    fmt::print("Invalid u64 in string: {}, {}", string, e.what());
+    return AdtModder::Error::InvalidOperation;
+  }
+}

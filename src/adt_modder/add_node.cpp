@@ -52,6 +52,11 @@ AdtModder::Result AddNodeOp::Run(AdtModder::Adt adt_data,
 
   const auto parent_node_offset =
       adt_path_offset(adt_data.data(), parent_node_name.c_str());
+  if (parent_node_offset < 0) {
+    fmt::print("Parent node does not exist: {}", parent_node_name);
+    return AdtModder::Error::NodeNotFound;
+  }
+
   const auto next_sibling_offset =
       adt_next_sibling_offset(adt_data.data(), parent_node_offset);
 
