@@ -34,9 +34,9 @@ struct adt_node_hdr {
   u32 child_count;
 };
 
-#define ADT_NODE(adt, offset) \
+#define ADT_NODE(adt, offset)                                                  \
   ((struct adt_node_hdr *)(((u8 *)(adt)) + (offset)))
-#define ADT_PROP(adt, offset) \
+#define ADT_PROP(adt, offset)                                                  \
   ((struct adt_property *)(((u8 *)(adt)) + (offset)))
 #define ADT_SIZE(node) ((node)->size & 0x7fffffff)
 
@@ -92,27 +92,27 @@ void *adt_getprop(void *adt, int nodeoffset, const char *name, u32 *lenp);
 int adt_getprop_copy(void *adt, int nodeoffset, const char *name, void *out,
                      size_t len);
 
-#define ADT_GETPROP(adt, nodeoffset, name, val) \
+#define ADT_GETPROP(adt, nodeoffset, name, val)                                \
   adt_getprop_copy(adt, nodeoffset, name, (val), sizeof(*(val)))
 
-#define ADT_GETPROP_ARRAY(adt, nodeoffset, name, arr) \
+#define ADT_GETPROP_ARRAY(adt, nodeoffset, name, arr)                          \
   adt_getprop_copy(adt, nodeoffset, name, (arr), sizeof(arr))
 
 int adt_get_reg(void *adt, int *path, const char *prop, int idx, u64 *addr,
                 u64 *size);
 bool adt_is_compatible(void *adt, int nodeoffset, const char *compat);
 
-#define ADT_FOREACH_CHILD(adt, node)                                    \
-  for (int _child_count = adt_get_child_count(adt, node); _child_count; \
-       _child_count = 0)                                                \
-    for (node = adt_first_child_offset(adt, node); _child_count--;      \
+#define ADT_FOREACH_CHILD(adt, node)                                           \
+  for (int _child_count = adt_get_child_count(adt, node); _child_count;        \
+       _child_count = 0)                                                       \
+    for (node = adt_first_child_offset(adt, node); _child_count--;             \
          node = adt_next_sibling_offset(adt, node))
 
-#define ADT_FOREACH_PROPERTY(adt, node, prop)                             \
-  for (int _prop_count = adt_get_property_count(adt, node),               \
-           _poff = adt_first_property_offset(adt, node);                  \
-       _prop_count; _prop_count = 0)                                      \
-    for (struct adt_property *prop = ADT_PROP(adt, _poff); _prop_count--; \
+#define ADT_FOREACH_PROPERTY(adt, node, prop)                                  \
+  for (int _prop_count = adt_get_property_count(adt, node),                    \
+           _poff = adt_first_property_offset(adt, node);                       \
+       _prop_count; _prop_count = 0)                                           \
+    for (struct adt_property *prop = ADT_PROP(adt, _poff); _prop_count--;      \
          prop = ADT_PROP(adt, _poff = adt_next_property_offset(adt, _poff)))
 
 #ifdef __cplusplus

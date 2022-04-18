@@ -8,7 +8,7 @@
 #include "ditto/span.h"
 
 class File {
- public:
+public:
   enum class Error {
     Unknown,
     IoError,
@@ -17,8 +17,8 @@ class File {
     InvalidPermissions,
   };
 
-  static Ditto::Result<File, Error> Create(const char* name);
-  static Ditto::Result<File, Error> Open(const char* name);
+  static Ditto::Result<File, Error> Create(const char *name);
+  static Ditto::Result<File, Error> Open(const char *name);
 
   Ditto::Result<std::vector<uint8_t>, Error> ReadAll();
   Ditto::Result<void, Error> Write(Ditto::span<uint8_t> buffer);
@@ -27,15 +27,15 @@ class File {
 
   Ditto::Result<size_t, Error> Size() const;
 
-  File(const File&) = delete;
-  File& operator=(const File&) = delete;
+  File(const File &) = delete;
+  File &operator=(const File &) = delete;
 
-  File(File&&);
-  File& operator=(File&&);
+  File(File &&);
+  File &operator=(File &&);
 
   ~File();
 
- private:
+private:
   int m_fd = -1;
 
   File(int fd) : m_fd(fd) {}
@@ -43,4 +43,4 @@ class File {
   static File::Error ErrorFromErrno(int error_var);
 };
 
-#endif  // FILEIO_H_
+#endif // FILEIO_H_

@@ -12,22 +12,22 @@ using Ditto::Result;
 
 File::Error File::ErrorFromErrno(int error_var) {
   switch (error_var) {
-    case EPERM:
-      return Error::InvalidPermissions;
-    case EACCES:
-      return Error::InvalidPermissions;
-    case EEXIST:
-      return Error::FileAlreadyExists;
-    case ENOENT:
-      return Error::FileDoesNotExist;
-    case EIO:
-      return Error::IoError;
-    default:
-      fmt::print("Unknown error: ({}) {}\n", error_var, strerror(error_var));
-      return Error::Unknown;
+  case EPERM:
+    return Error::InvalidPermissions;
+  case EACCES:
+    return Error::InvalidPermissions;
+  case EEXIST:
+    return Error::FileAlreadyExists;
+  case ENOENT:
+    return Error::FileDoesNotExist;
+  case EIO:
+    return Error::IoError;
+  default:
+    fmt::print("Unknown error: ({}) {}\n", error_var, strerror(error_var));
+    return Error::Unknown;
   }
 }
-Result<File, File::Error> File::Create(const char* name) {
+Result<File, File::Error> File::Create(const char *name) {
   int fd = open(name, O_RDWR | O_CREAT, S_IRWXU | S_IRWXG | S_IROTH);
   if (fd < 0) {
     return File::ErrorFromErrno(errno);
@@ -35,7 +35,7 @@ Result<File, File::Error> File::Create(const char* name) {
   return File{fd};
 }
 
-Result<File, File::Error> File::Open(const char* name) {
+Result<File, File::Error> File::Open(const char *name) {
   int fd = open(name, O_RDONLY);
   if (fd < 0) {
     return File::ErrorFromErrno(errno);
@@ -88,10 +88,11 @@ Result<void, File::Error> File::Write(Ditto::span<uint8_t> buffer) {
   return Result<void, Error>::ok();
 }
 
-File::File(File&& other) : m_fd(other.m_fd) { other.m_fd = -1; }
+File::File(File &&other) : m_fd(other.m_fd) { other.m_fd = -1; }
 
-File& File::operator=(File&& other) {
-  if (this == &other) return *this;
+File &File::operator=(File &&other) {
+  if (this == &other)
+    return *this;
 
   if (m_fd >= 0) {
     close(m_fd);

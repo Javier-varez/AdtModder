@@ -5,16 +5,17 @@
 #include "fmt/core.h"
 
 class DeletePropertyOp : public AdtModder::Op {
- public:
-  static DeletePropertyOp& GetInstance() {
+public:
+  static DeletePropertyOp &GetInstance() {
     static DeletePropertyOp op;
     return op;
   }
 
- private:
-  AdtModder::Result Run(AdtModder::Adt adt_data, const nlohmann::json&) noexcept override;
+private:
+  AdtModder::Result Run(AdtModder::Adt adt_data,
+                        const nlohmann::json &) noexcept override;
 
-  [[nodiscard]] const char* Help() const noexcept override {
+  [[nodiscard]] const char *Help() const noexcept override {
     return "Deletes the given property for the given node in the ADT";
   }
 
@@ -24,8 +25,9 @@ class DeletePropertyOp : public AdtModder::Op {
 bool DeletePropertyOp::s_initialized = AdtModder::RegisterOperation(
     "delete_property", DeletePropertyOp::GetInstance());
 
-AdtModder::Result DeletePropertyOp::Run(AdtModder::Adt adt_data,
-                                 const nlohmann::json& command) noexcept{
+AdtModder::Result
+DeletePropertyOp::Run(AdtModder::Adt adt_data,
+                      const nlohmann::json &command) noexcept {
   if (!command.contains("node") || !command["node"].is_string()) {
     fmt::print("Unable to find node in command\n");
     return AdtModder::Error::InvalidOperation;
@@ -38,13 +40,13 @@ AdtModder::Result DeletePropertyOp::Run(AdtModder::Adt adt_data,
   const std::string node_name = command["node"].get<std::string>();
   const std::string prop_name = command["property"].get<std::string>();
 
-  uint8_t* data = adt_data.data();
+  uint8_t *data = adt_data.data();
   int node_offset = adt_path_offset(data, node_name.c_str());
   if (node_offset < 0) {
     fmt::print("Could not find node \"{}\"\n", node_name.c_str());
     return AdtModder::Error::NodeNotFound;
   }
-  auto* prop = adt_get_property(data, node_offset, prop_name.c_str());
+  auto *prop = adt_get_property(data, node_offset, prop_name.c_str());
   if (prop == nullptr) {
     fmt::print("Could not find node \"{}\", prop \"{}\"\n", node_name,
                prop_name);

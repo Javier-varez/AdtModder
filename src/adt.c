@@ -6,10 +6,11 @@
 
 /* This API is designed to match libfdt's read-only API */
 
-#define ADT_CHECK_HEADER(adt)                           \
-  {                                                     \
-    int err;                                            \
-    if ((err = adt_check_header(adt)) != 0) return err; \
+#define ADT_CHECK_HEADER(adt)                                                  \
+  {                                                                            \
+    int err;                                                                   \
+    if ((err = adt_check_header(adt)) != 0)                                    \
+      return err;                                                              \
   }
 
 //#define DEBUG
@@ -18,13 +19,14 @@
 #include "utils.h"
 #define dprintf printf
 #else
-#define dprintf(...) \
-  do {               \
+#define dprintf(...)                                                           \
+  do {                                                                         \
   } while (0)
 #endif
 
 int _adt_check_node_offset(void *adt, int offset) {
-  if ((offset < 0) || (offset % ADT_ALIGN)) return -ADT_ERR_BADOFFSET;
+  if ((offset < 0) || (offset % ADT_ALIGN))
+    return -ADT_ERR_BADOFFSET;
 
   struct adt_node_hdr *node = ADT_NODE(adt, offset);
 
@@ -37,11 +39,12 @@ int _adt_check_node_offset(void *adt, int offset) {
 }
 
 int _adt_check_prop_offset(void *adt, int offset) {
-  if ((offset < 0) || (offset % ADT_ALIGN)) return -ADT_ERR_BADOFFSET;
+  if ((offset < 0) || (offset % ADT_ALIGN))
+    return -ADT_ERR_BADOFFSET;
 
   struct adt_property *prop = ADT_PROP(adt, offset);
 
-  if (prop->size & 0x7ff00000)  // up to 1MB properties
+  if (prop->size & 0x7ff00000) // up to 1MB properties
     return -ADT_ERR_BADOFFSET;
 
   return 0;
@@ -54,7 +57,8 @@ static int _adt_string_eq(const char *a, const char *b, size_t len) {
 }
 
 static int _adt_nodename_eq(const char *a, const char *b, size_t len) {
-  if (memcmp(a, b, len) != 0) return 0;
+  if (memcmp(a, b, len) != 0)
+    return 0;
 
   if (a[len] == '\0')
     return 1;
@@ -72,7 +76,8 @@ struct adt_property *adt_get_property_namelen(void *adt, int offset,
 
   ADT_FOREACH_PROPERTY(adt, offset, prop) {
     dprintf(" off=0x%x name=\"%s\"\n", offset, prop->name);
-    if (_adt_string_eq(prop->name, name, namelen)) return prop;
+    if (_adt_string_eq(prop->name, name, namelen))
+      return prop;
   }
 
   return NULL;
@@ -96,9 +101,11 @@ void *adt_getprop_namelen(void *adt, int nodeoffset, const char *name,
 
   prop = adt_get_property_namelen(adt, nodeoffset, name, namelen);
 
-  if (!prop) return NULL;
+  if (!prop)
+    return NULL;
 
-  if (lenp) *lenp = prop->size;
+  if (lenp)
+    *lenp = prop->size;
 
   return prop->value;
 }
@@ -108,10 +115,13 @@ void *adt_getprop_by_offset(void *adt, int offset, const char **namep,
   struct adt_property *prop;
 
   prop = adt_get_property_by_offset(adt, offset);
-  if (!prop) return NULL;
+  if (!prop)
+    return NULL;
 
-  if (namep) *namep = prop->name;
-  if (lenp) *lenp = prop->size;
+  if (namep)
+    *namep = prop->name;
+  if (lenp)
+    *lenp = prop->size;
   return prop->value;
 }
 
@@ -125,9 +135,11 @@ int adt_getprop_copy(void *adt, int nodeoffset, const char *name, void *out,
 
   void *p = adt_getprop(adt, nodeoffset, name, &plen);
 
-  if (!p) return -ADT_ERR_NOTFOUND;
+  if (!p)
+    return -ADT_ERR_NOTFOUND;
 
-  if (plen != len) return -ADT_ERR_BADLENGTH;
+  if (plen != len)
+    return -ADT_ERR_BADLENGTH;
 
   memcpy(out, p, len);
   return len;
@@ -166,7 +178,8 @@ int adt_subnode_offset_namelen(void *adt, int offset, const char *name,
   ADT_FOREACH_CHILD(adt, offset) {
     const char *cname = adt_get_name(adt, offset);
 
-    if (_adt_nodename_eq(cname, name, namelen)) return offset;
+    if (_adt_nodename_eq(cname, name, namelen))
+      return offset;
   }
 
   return -ADT_ERR_NOTFOUND;
@@ -190,20 +203,26 @@ int adt_path_offset_trace(void *adt, const char *path, int *offsets) {
   while (*p) {
     const char *q;
 
-    while (*p == '/') p++;
-    if (!*p) break;
+    while (*p == '/')
+      p++;
+    if (!*p)
+      break;
     q = strchr(p, '/');
-    if (!q) q = end;
+    if (!q)
+      q = end;
 
     offset = adt_subnode_offset_namelen(adt, offset, p, q - p);
-    if (offset < 0) break;
+    if (offset < 0)
+      break;
 
-    if (offsets) *offsets++ = offset;
+    if (offsets)
+      *offsets++ = offset;
 
     p = q;
   }
 
-  if (offsets) *offsets++ = 0;
+  if (offsets)
+    *offsets++ = 0;
 
   return offset;
 }
@@ -214,16 +233,19 @@ const char *adt_get_name(void *adt, int nodeoffset) {
 
 static void get_cells(u64 *dst, u32 **src, int cells) {
   *dst = 0;
-  for (int i = 0; i < cells; i++) *dst |= ((u64) * ((*src)++)) << (32 * i);
+  for (int i = 0; i < cells; i++)
+    *dst |= ((u64) * ((*src)++)) << (32 * i);
 }
 
 int adt_get_reg(void *adt, int *path, const char *prop, int idx, u64 *paddr,
                 u64 *psize) {
   int cur = 0;
 
-  if (!*path) return -ADT_ERR_BADOFFSET;
+  if (!*path)
+    return -ADT_ERR_BADOFFSET;
 
-  while (path[cur + 1]) cur++;
+  while (path[cur + 1])
+    cur++;
 
   int node = path[cur];
   int parent = cur > 0 ? path[cur - 1] : 0;
@@ -232,10 +254,9 @@ int adt_get_reg(void *adt, int *path, const char *prop, int idx, u64 *paddr,
   ADT_GETPROP(adt, parent, "#address-cells", &a_cells);
   ADT_GETPROP(adt, parent, "#size-cells", &s_cells);
 
-  dprintf(
-      "adt_get_reg: node '%s' @ %d, parent @ %d, address-cells=%d "
-      "size-cells=%d idx=%d\n",
-      adt_get_name(adt, node), node, parent, a_cells, s_cells, idx);
+  dprintf("adt_get_reg: node '%s' @ %d, parent @ %d, address-cells=%d "
+          "size-cells=%d idx=%d\n",
+          adt_get_name(adt, node), node, parent, a_cells, s_cells, idx);
 
   if (a_cells < 1 || a_cells > 2 || s_cells > 2) {
     dprintf("bad n-cells\n");
@@ -272,7 +293,8 @@ int adt_get_reg(void *adt, int *path, const char *prop, int idx, u64 *paddr,
 
     u32 ranges_len;
     u32 *ranges = adt_getprop(adt, node, "ranges", &ranges_len);
-    if (!ranges) break;
+    if (!ranges)
+      break;
 
     u32 pa_cells = 2, ps_cells = 1;
     ADT_GETPROP(adt, parent, "#address-cells", &pa_cells);
@@ -281,7 +303,8 @@ int adt_get_reg(void *adt, int *path, const char *prop, int idx, u64 *paddr,
     dprintf(" translate range to address-cells=%d size-cells=%d\n", pa_cells,
             ps_cells);
 
-    if (pa_cells < 1 || pa_cells > 2 || ps_cells > 2) return ADT_ERR_BADNCELLS;
+    if (pa_cells < 1 || pa_cells > 2 || ps_cells > 2)
+      return ADT_ERR_BADNCELLS;
 
     int range_cnt = ranges_len / (4 * (pa_cells + a_cells + s_cells));
 
@@ -305,8 +328,10 @@ int adt_get_reg(void *adt, int *path, const char *prop, int idx, u64 *paddr,
     s_cells = ps_cells;
   }
 
-  if (paddr) *paddr = addr;
-  if (psize) *psize = size;
+  if (paddr)
+    *paddr = addr;
+  if (psize)
+    *psize = size;
 
   return 0;
 }
@@ -314,12 +339,14 @@ int adt_get_reg(void *adt, int *path, const char *prop, int idx, u64 *paddr,
 bool adt_is_compatible(void *adt, int nodeoffset, const char *compat) {
   u32 len;
   const char *list = adt_getprop(adt, nodeoffset, "compatible", &len);
-  if (!list) return false;
+  if (!list)
+    return false;
 
   const char *end = list + len;
 
   while (list != end) {
-    if (!strcmp(list, compat)) return true;
+    if (!strcmp(list, compat))
+      return true;
     list += strlen(list) + 1;
   }
 

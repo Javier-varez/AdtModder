@@ -4,20 +4,21 @@
 
 #include "fmt/core.h"
 
-std::unordered_map<std::string, AdtModder::Op*>& GetOperations() {
-  static std::unordered_map<std::string, AdtModder::Op*> ops;
+std::unordered_map<std::string, AdtModder::Op *> &GetOperations() {
+  static std::unordered_map<std::string, AdtModder::Op *> ops;
   return ops;
 }
 
-AdtModder::Result AdtModder::RunFromJson(AdtModder::Adt adt_data,
-                            const nlohmann::json& op_array) noexcept {
+AdtModder::Result
+AdtModder::RunFromJson(AdtModder::Adt adt_data,
+                       const nlohmann::json &op_array) noexcept {
   if (!op_array.is_array()) {
     fmt::print("AdtModder: Expected a json array.\n");
     return Error::MalformedJson;
   }
 
-  auto& ops = GetOperations();
-  for (auto& element : op_array) {
+  auto &ops = GetOperations();
+  for (auto &element : op_array) {
     if (!element.is_object()) {
       fmt::print("AdtModder: Expected a json object.\n");
       return Error::MalformedJson;
@@ -51,13 +52,14 @@ AdtModder::Result AdtModder::RunFromJson(AdtModder::Adt adt_data,
 std::string AdtModder::Help() const noexcept {
   std::stringstream stream;
   stream << "\nSupported Adt Modder commands:\n";
-  for (const auto& [name, op] : GetOperations()) {
+  for (const auto &[name, op] : GetOperations()) {
     stream << fmt::format("Command \"{}\": {}\n", name, op->Help());
   }
   return stream.str();
 }
 
-bool AdtModder::RegisterOperation(std::string_view name, Op& operation) noexcept {
+bool AdtModder::RegisterOperation(std::string_view name,
+                                  Op &operation) noexcept {
   GetOperations()[std::string{name}] = &operation;
   return true;
 }

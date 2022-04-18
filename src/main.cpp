@@ -4,7 +4,7 @@
 #include "fmt/core.h"
 #include "nlohmann/json.hpp"
 
-Ditto::Result<void, File::Error> run(int argc, char* argv[]) {
+Ditto::Result<void, File::Error> run(int argc, char *argv[]) {
   AdtModder modder;
   argparse::ArgumentParser program("adt_modder");
 
@@ -17,7 +17,7 @@ Ditto::Result<void, File::Error> run(int argc, char* argv[]) {
 
   try {
     program.parse_args(argc, argv);
-  } catch (const std::runtime_error& exc) {
+  } catch (const std::runtime_error &exc) {
     fmt::print("{}", exc.what());
     std::exit(1);
   }
@@ -35,7 +35,8 @@ Ditto::Result<void, File::Error> run(int argc, char* argv[]) {
 
   auto mod_result = modder.RunFromJson(dt_data, operations);
   if (mod_result.is_error()) {
-    fmt::print("Error running commands: {}", AdtModder::error_to_string(mod_result.error_value()));
+    fmt::print("Error running commands: {}",
+               AdtModder::error_to_string(mod_result.error_value()));
     exit(1);
   }
 
@@ -48,7 +49,7 @@ Ditto::Result<void, File::Error> run(int argc, char* argv[]) {
   return Ditto::Result<void, File::Error>::ok();
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
   srand(time(nullptr));
   auto result = run(argc, argv);
   if (result.is_error()) {
