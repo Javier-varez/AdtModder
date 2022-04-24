@@ -3,6 +3,7 @@
 #include "adt.h"
 #include "adt_modder.h"
 #include "fmt/core.h"
+#include "utils.h"
 
 class AddNodeOp : public AdtModder::Op {
 public:
@@ -62,8 +63,11 @@ AdtModder::Result AddNodeOp::Run(AdtModder::Adt adt_data,
 
   // New node will be empty, just header + name property (prop_value =
   // child_node_name + '\0')
-  const size_t new_node_size = sizeof(adt_node_hdr) + sizeof(adt_property) +
-                               child_node_name.length() + 1;
+  // All nodes should align to 32 bit boundaries
+  const size_t new_node_size =
+      utils::roundUpToAlignment(sizeof(adt_node_hdr) + sizeof(adt_property) +
+                                    child_node_name.length() + 1,
+                                sizeof(uint32_t));
 
   const auto prev_size = adt_data.size();
   const auto new_size = prev_size + new_node_size;

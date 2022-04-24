@@ -3,6 +3,7 @@
 #include "adt.h"
 #include "adt_modder.h"
 #include "fmt/core.h"
+#include "utils.h"
 
 class AddPropertyOp : public AdtModder::Op {
 public:
@@ -47,7 +48,8 @@ AdtModder::Result AddPropertyOp::Run(AdtModder::Adt adt_data,
       adt_first_child_offset(adt_data.data(), node_offset);
 
   // Calculate size of the property
-  const size_t property_size = sizeof(adt_property) + value.size();
+  const size_t property_size = utils::roundUpToAlignment(
+      sizeof(adt_property) + value.size(), sizeof(uint32_t));
 
   // Resize the vector
   const auto old_size = adt_data.size();
